@@ -2,6 +2,7 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Output, Input, ALL, State, MATCH, ALLSMALLER
 import plotly.express as px
+import plotly.graph_objects as go
 import plotly
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -9,7 +10,7 @@ import pandas as pd
 app = dash.Dash(__name__)
 
 df = pd.read_csv("coupons.csv")
-df.info()
+# df.info()
 
 # List of columns that we would like to explore
 unique_weather = df['weather'].unique()
@@ -22,6 +23,7 @@ unique_expiration = df['expiration'].unique()
 unique_age = df['age'].unique()
 unique_gender = df['gender'].unique()
 
+#-------------------------------------------------------------------------------------
 # Function that creates a multi-select dropdown for each of the column in the dictionary
 def generate_dropdowns():
     dictionary = [
@@ -55,69 +57,112 @@ def generate_dropdowns():
         dropdowns.append(html.Br())  # add a line break after each row
     return dropdowns
 
+
+#-------------------------------------------------------------------------------------
 app.layout = html.Div([
 
+    # -------------------------------------------------------------------------------------
+    # Navigation bar
+    # html.Div([
+    #     html.H3('Navigation'),
+    #     html.Ul([
+    #         html.Li([
+    #             html.I(className='fa fa-home'),  # placeholder for icon
+    #             html.A('Home', href='http://www.example.com/home'),  # placeholder for link
+    #         ]),
+    #         html.Li([
+    #             html.I(className='fa fa-user'),
+    #             html.A('Profile', href='http://www.example.com/profile'),
+    #         ]),
+    #         html.Li([
+    #             html.I(className='fa fa-cog'),
+    #             html.A('Settings', href='http://www.example.com/settings'),
+    #         ]),
+    #         # add more list items here for additional links
+    #     ])
+    # ], className='navbar'),
+
+    # -------------------------------------------------------------------------------------
+    # Main content
     html.Div([
-        html.Br(),
-        dcc.RadioItems(options=[
-            {'label': 'All Coupons', 'value': 'all'},
-            {'label': 'Accepted', 'value': 'accepted'},
-            {'label': 'Rejected', 'value': 'rejected'}],
-            value='all',
-            labelStyle={'display': 'inline-block'},
-            id='coupon_status'
+
+        html.Div(generate_dropdowns()),
+
+        # -------------------------------------------------------------------------------------
+        # Clear filter Button
+        html.Div([
+        html.Button('Clear Filters', id='clear-button', n_clicks=0),
+        ]),
+        #-------------------------------------------------------------------------------------
+        # Master Dropdown that impacts table categories
+        html.Div([
+
+            html.Label(['Choose column:'], style={'font-weight': 'bold', "text-align": "center"}),
+
+            dcc.Dropdown(id='my_dropdown',
+                         options=[
+                             {'label': 'Coupon', 'value': 'coupon'},
+                             {'label': 'Marital Status', 'value': 'maritalStatus'},
+                             {'label': 'Education', 'value': 'Education'},
+                             {'label': '# Children', 'value': 'has_children'},
+                             {'label': 'Age', 'value': 'age'},
+                             {'label': 'Destination', 'value': 'destination'},
+                             {'label': 'Gender', 'value': 'gender'},
+                             {'label': 'Expiration', 'value': 'expiration'},
+                             {'label': 'Time', 'value': 'time'},
+                             {'label': 'Weather', 'value': 'weather'},
+
+                         ],
+                         optionHeight=35,  # height/space between dropdown options
+                         value='coupon',  # dropdown value selected automatically when page loads
+                         disabled=False,  # disable dropdown value selection
+                         multi=False,  # allow multiple dropdown values to be selected
+                         searchable=True,  # allow user-searching of dropdown values
+                         search_value='',  # remembers the value searched in dropdown
+                         placeholder='Please select...',  # gray, default text shown when no option is selected
+                         clearable=True,  # allow user to removes the selected value
+                         style={'width': "100%"},  # use dictionary to define CSS styles of your dropdown
+                         # className='select_box',           #activate separate CSS document in assets folder
+                         persistence=True,  # remembers dropdown value. Used with persistence_type
+                         persistence_type='memory'  # remembers dropdown value selected until...
+                         )
+        ], style={'display': 'inline-block', 'width': '90%', 'height': '100px'}),  # changed from 4 to 3 columns
+
+        #-------------------------------------------------------------------------------------
+        # Add Grouped Bar Graphs
+
+        html.Div(
+             dcc.Graph(id = 'bar_graph'), style={'display': 'inline-block', 'width': '90%'}
         ),
-        html.Br()]),
 
-    html.Div(generate_dropdowns()),
+                # -------------------------------------------------------------------------------------
+        # Add Drop Downs for Filtering
+        html.Div([
 
-   # html.Br(),
-    html.Button('Clear Filters', id='clear-button', n_clicks=0),
+            html.Br(),
+            dcc.RadioItems(options=[
+                {'label': 'All Coupons', 'value': 'all'},
+                {'label': 'Accepted', 'value': 'accepted'},
+                {'label': 'Rejected', 'value': 'rejected'}],
+                value='all',
+                labelStyle={'display': 'inline-block'},
+                id='coupon_status'
+            ),
+            html.Br()]),
 
-    html.Br(),
-    html.Div([
-        html.Br(),
+        # -------------------------------------------------------------------------------------
+        # Add side by side graphs
 
-        html.Label(['Choose column:'], style={'font-weight': 'bold', "text-align": "center"}),
+        html.Div([
+            html.Div(dcc.Graph(id='our_graph'), style={'display': 'inline-block', 'width': '49%', 'height': '500px'}),
+            html.Div(dcc.Graph(id='our_graph2'), style={'display': 'inline-block', 'width': '49%', 'height': '500px'})
+        ]),
 
-        dcc.Dropdown(id='my_dropdown',
-                     options=[
-                         {'label': 'Coupon', 'value': 'coupon'},
-                         {'label': 'Marital Status', 'value': 'maritalStatus'},
-                         {'label': 'Education', 'value': 'Education'},
-                         {'label': '# Children', 'value': 'has_children'},
-                         {'label': 'Age', 'value': 'age'},
-                         {'label': 'Destination', 'value': 'destination'},
-                         {'label': 'Gender', 'value': 'gender'},
-                         {'label': 'Expiration', 'value': 'expiration'},
-                         {'label': 'Time', 'value': 'time'},
-                         {'label': 'Weather', 'value': 'weather'},
 
-                     ],
-                     optionHeight=35,  # height/space between dropdown options
-                     value='coupon',  # dropdown value selected automatically when page loads
-                     disabled=False,  # disable dropdown value selection
-                     multi=False,  # allow multiple dropdown values to be selected
-                     searchable=True,  # allow user-searching of dropdown values
-                     search_value='',  # remembers the value searched in dropdown
-                     placeholder='Please select...',  # gray, default text shown when no option is selected
-                     clearable=True,  # allow user to removes the selected value
-                     style={'width': "100%"},  # use dictionary to define CSS styles of your dropdown
-                     # className='select_box',           #activate separate CSS document in assets folder
-                     persistence=True,  # remembers dropdown value. Used with persistence_type
-                     persistence_type='memory'  # remembers dropdown value selected until...
-                     )
-    ], className='three columns'),  # changed from 4 to 3 columns
 
-    html.Br(),
-    html.Div([
-        html.Div(dcc.Graph(id='our_graph'), style={'display': 'inline-block', 'width': '49%', 'height': '500px'}),
-        html.Div(dcc.Graph(id='our_graph2'), style={'display': 'inline-block', 'width': '49%', 'height': '500px'})
-    ]),
+    ], className='main-content'),
 
-    html.Br(),
-
-])
+], className='container')
 
 
 
@@ -133,7 +178,9 @@ def filter_dataframe(df, column, values):
     # callback below is used to update the graph based on the filters applied from the dropdowns
 @app.callback(
     [Output(component_id='our_graph', component_property='figure'),
-    Output(component_id='our_graph2', component_property='figure')],
+     Output(component_id='our_graph2', component_property='figure'),
+     # Output(component_id='our_graph3', component_property='figure')
+     ],
     [
      Input(component_id='my_dropdown', component_property='value'),
      Input(component_id='coupon_status', component_property='value'),
@@ -173,7 +220,62 @@ def build_graph(column_chosen, coupon_status, selected_weather, selected_income,
 
     fig = px.histogram(dff, x=column_chosen, color='coupon')
     fig2 = px.histogram(dff, color=column_chosen, x='coupon')
+
+
     return fig, fig2
+
+#---------------------------------------------------------------
+# create grouped bar graph
+
+@app.callback(
+         Output(component_id='bar_graph', component_property='figure'),
+    [
+        Input(component_id='weather_dropdown', component_property='value'),
+        Input(component_id='income_dropdown', component_property='value'),
+        Input(component_id='education_dropdown', component_property='value'),
+        Input(component_id='destination_dropdown', component_property='value'),
+        Input(component_id='passanger_dropdown', component_property='value'),
+        Input(component_id='time_dropdown', component_property='value'),
+        Input(component_id='expiration_dropdown', component_property='value'),
+        Input(component_id='age_dropdown', component_property='value'),
+        Input(component_id='gender_dropdown', component_property='value'),
+        Input(component_id='my_dropdown', component_property='value'),
+    ]
+)
+
+def create_grouped_bar(selected_weather, selected_income, selected_education,
+                selected_destination, selected_passanger, selected_time, selected_expiration, selected_age,
+                selected_gender, column_chosen2):
+    dffBar = df
+    dffBar = filter_dataframe(dffBar, 'weather', selected_weather)
+    dffBar = filter_dataframe(dffBar, 'income', selected_income)
+    dffBar = filter_dataframe(dffBar, 'education', selected_education)
+    dffBar = filter_dataframe(dffBar, 'destination', selected_destination)
+    dffBar = filter_dataframe(dffBar, 'passanger', selected_passanger)
+    dffBar = filter_dataframe(dffBar, 'time', selected_time)
+    dffBar = filter_dataframe(dffBar, 'expiration', selected_expiration)
+    dffBar = filter_dataframe(dffBar, 'age', selected_age)
+    dffBar = filter_dataframe(dffBar, 'gender', selected_gender)
+    accepted = dffBar[dffBar['Y'] == 1]
+    acceptedDf = accepted.groupby(column_chosen2).size().reset_index().set_index(column_chosen2)
+    acceptedDf.columns = ['Accepted']
+
+    denied = dffBar[dffBar['Y'] == 0]
+    deniedDf = denied.groupby(column_chosen2).size().reset_index().set_index(column_chosen2)
+    deniedDf.columns = ['Denied']
+
+    groupedDf = acceptedDf.merge(deniedDf, on=column_chosen2).reset_index()
+
+
+
+    fig_bar = go.Figure()
+    fig_bar.add_trace(go.Bar(x=groupedDf[column_chosen2], y=groupedDf['Accepted'], name='Accepted'))
+    fig_bar.add_trace(go.Bar(x=groupedDf[column_chosen2], y=groupedDf['Denied'], name='Denied'))
+    fig_bar.update_layout(barmode='group', xaxis_title=column_chosen2, yaxis_title='Count', title='Grouped bar')
+
+
+    return fig_bar
+
 
 #---------------------------------------------------------------
 # callback below is used to clear all dropdown filters
@@ -198,10 +300,13 @@ def clear_filters(n_clicks):
     raise dash.exceptions.PreventUpdate
 
 
+
+
 #---------------------------------------------------------------
 
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=9000)
+
 
 
