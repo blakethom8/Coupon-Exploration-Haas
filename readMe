@@ -1,0 +1,19 @@
+Title: Coupon Data Exploration
+Project Description: For Module 5, we were provided a dataset of customer & coupon attributes and a binary result of whether the customer accepted the coupon.
+Our goal is to explore the dataset and highlight the differences between customers who did and did not accept the coupons
+
+Approach: I followed two routes to explore the data set: 
+1) Build a Plotly Dash App to adjust filters and graph selection criteria
+2) In Jupyter, create a one-hot dataframe to explore the acceptance ratio of specific values 
+
+Overview (from project file): The goal of this project is to use what you know about visualizations and probability distributions to 
+distinguish between customers who accepted a driving coupon versus those that did not.
+
+Data (from project file): This data comes to us from the UCI Machine Learning repository and was collected via a survey on Amazon Mechanical Turk. 
+The survey describes different driving scenarios including the destination, current time, weather, passenger, etc., and 
+then ask the person whether he will accept the coupon if he is the driver. Answers that the user will drive there ‘right away’ or ‘later 
+before the coupon expires’ are labeled as ‘Y = 1’ and answers ‘no, I do not want the coupon’ are labeled as ‘Y = 0’. 
+There are five different types of coupons -- less expensive restaurants (under $20), coffee houses, carry out & take away, bar, 
+and more expensive restaurants ($20 - $50).
+
+
