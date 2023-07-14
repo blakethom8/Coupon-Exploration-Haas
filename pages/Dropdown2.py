@@ -1,13 +1,13 @@
 import dash
-from dash import dcc, html
-from dash.dependencies import Output, Input, ALL, State, MATCH, ALLSMALLER
+from dash import dcc, html, Output, Input, callback
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly
 import dash_bootstrap_components as dbc
 import pandas as pd
 
-app = dash.Dash(__name__)
+
+dash.register_page(__name__, name='Coupon Charts')
 
 df = pd.read_csv("coupons.csv")
 # df.info()
@@ -57,10 +57,52 @@ def generate_dropdowns():
         dropdowns.append(html.Br())  # add a line break after each row
     return dropdowns
 
+#-------------------------------------------------------------------------------------
+# Create Sidebar
+#
+# # styling the sidebar
+# SIDEBAR_STYLE = {
+#     "position": "fixed",
+#     "top": 0,
+#     "left": 0,
+#     "bottom": 0,
+#     "width": "16rem",
+#     "padding": "2rem 1rem",
+#     "background-color": "#f8f9fa",
+# }
+#
+# # padding for the page content
+# CONTENT_STYLE = {
+#     "margin-left": "18rem",
+#     "margin-right": "2rem",
+#     "padding": "2rem 1rem",
+# }
+#
+# # Make the actual sidebar
+# sidebar = html.Div(
+#     [
+#         html.H2("Filters", className="display-4"),
+#         html.Hr(),
+#         html.P(
+#             "Select filters to apply to the data", className="lead"
+#         ),
+#         dbc.Nav(
+#             [
+#                 dbc.NavLink("Home", href="/", active="exact"),
+#                 dbc.NavLink("Page 1", href="/page-1", active="exact"),
+#                 dbc.NavLink("Page 2", href="/page-2", active="exact"),
+#             ],
+#             vertical=True,
+#             pills=True,
+#         ),
+#     ],
+#     style=SIDEBAR_STYLE,
+# )
+
 
 #-------------------------------------------------------------------------------------
-app.layout = html.Div([
-
+layout = html.Div([
+    # sidebar,
     # -------------------------------------------------------------------------------------
     # Navigation bar
     # html.Div([
@@ -160,9 +202,11 @@ app.layout = html.Div([
 
 
 
-    ], className='main-content'),
+    ],
+        # style=CONTENT_STYLE
+    ),
 
-], className='container')
+])
 
 
 
@@ -176,7 +220,7 @@ def filter_dataframe(df, column, values):
         return df
 
     # callback below is used to update the graph based on the filters applied from the dropdowns
-@app.callback(
+@callback(
     [Output(component_id='our_graph', component_property='figure'),
      Output(component_id='our_graph2', component_property='figure'),
      # Output(component_id='our_graph3', component_property='figure')
@@ -227,7 +271,7 @@ def build_graph(column_chosen, coupon_status, selected_weather, selected_income,
 #---------------------------------------------------------------
 # create grouped bar graph
 
-@app.callback(
+@callback(
          Output(component_id='bar_graph', component_property='figure'),
     [
         Input(component_id='weather_dropdown', component_property='value'),
@@ -280,7 +324,7 @@ def create_grouped_bar(selected_weather, selected_income, selected_education,
 #---------------------------------------------------------------
 # callback below is used to clear all dropdown filters
 
-@app.callback(
+@callback(
     [Output('weather_dropdown', 'value'),
      Output('income_dropdown', 'value'),
      Output('education_dropdown', 'value'),
@@ -298,15 +342,3 @@ def clear_filters(n_clicks):
     if n_clicks > 0:
         return [None]*9  # return a list of None values, one for each dropdown
     raise dash.exceptions.PreventUpdate
-
-
-
-
-#---------------------------------------------------------------
-
-
-if __name__ == '__main__':
-    app.run_server(debug=True, port=9000)
-
-
-
