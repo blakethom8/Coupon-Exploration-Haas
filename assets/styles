@@ -1,0 +1,38 @@
+.navbar {
+    background-color: #f8f9fa;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.navbar li {
+    float: left;
+    margin-right: 10px;
+}
+
+.navbar li a {
+    display: block;
+    color: #000;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.main-content {
+    margin: 0 auto;
+    width: 80%;
+}
+
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
