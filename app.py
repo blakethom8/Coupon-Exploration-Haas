@@ -19,11 +19,11 @@ app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.SPACE
                 )
 
 # for your home PostgreSQL test table
-auth = da.BasicAuth(
-    app,
-    {'admin': 'password',
-     'blake': 'password'}
-)
+# auth = da.BasicAuth(
+#     app,
+#     {'admin': 'password',
+#      'blake': 'password'}
+# )
 
 db.init_app(app.server)
 
