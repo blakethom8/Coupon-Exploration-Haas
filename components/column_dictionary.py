@@ -27,6 +27,17 @@ column_dict = [
     {"label": "Gender", "id": "gender_dropdown", "values": unique_gender},
 ]
 
+column_list = ['weather',
+               'income',
+               'education',
+                'destination',
+               'passanger',
+               'time',
+               'expiration',
+               'age',
+               'gender'
+               ]
+
 column_names ={
     "weather": "Weather",
     "income" : "Income",
@@ -43,7 +54,7 @@ column_dict2 = [
     {"label": "Weather", "id": "weather"},
     {"label": "Income", "id": "income"},
     {"label": "Education", "id": "education"},
-    {"label": "Destination", "id": "destinationn"},
+    {"label": "Destination", "id": "destination"},
     {"label": "Passanger", "id": "passanger"},
     {"label": "Time", "id": "time"},
     {"label": "Expiration", "id": "expiration"},

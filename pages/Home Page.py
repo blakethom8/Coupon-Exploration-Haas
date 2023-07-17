@@ -6,25 +6,13 @@ import plotly.graph_objects as go
 import plotly
 import dash_bootstrap_components as dbc
 import pandas as pd
-from components.column_dictionary import column_names
+from components.column_dictionary import column_names, column_list
 
 
 dash.register_page(__name__, name="Home Page", path='/')
 
-
-
 df = pd.read_csv("coupons.csv")
-# List of columns that we would like to explore
-column_list = ['weather',
-               'income',
-               'education',
-                'destination',
-               'passanger',
-               'time',
-               'expiration',
-               'age',
-               'gender'
-               ]
+
 df_columns = df[column_list]
 
 
@@ -42,7 +30,6 @@ accordion = dbc.Accordion(
     flush=True,
     id ="accordion-always-open",
 )
-
 
 layout = html.Div(
     [

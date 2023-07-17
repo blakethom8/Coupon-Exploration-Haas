@@ -57,9 +57,72 @@ def generate_dropdowns():
         dropdowns.append(html.Br())  # add a line break after each row
     return dropdowns
 
+#-------------------------------------------------------------------------------------
+# Create Sidebar
+#
+# # styling the sidebar
+# SIDEBAR_STYLE = {
+#     "position": "fixed",
+#     "top": 0,
+#     "left": 0,
+#     "bottom": 0,
+#     "width": "16rem",
+#     "padding": "2rem 1rem",
+#     "background-color": "#f8f9fa",
+# }
+#
+# # padding for the page content
+# CONTENT_STYLE = {
+#     "margin-left": "18rem",
+#     "margin-right": "2rem",
+#     "padding": "2rem 1rem",
+# }
+#
+# # Make the actual sidebar
+# sidebar = html.Div(
+#     [
+#         html.H2("Filters", className="display-4"),
+#         html.Hr(),
+#         html.P(
+#             "Select filters to apply to the data", className="lead"
+#         ),
+#         dbc.Nav(
+#             [
+#                 dbc.NavLink("Home", href="/", active="exact"),
+#                 dbc.NavLink("Page 1", href="/page-1", active="exact"),
+#                 dbc.NavLink("Page 2", href="/page-2", active="exact"),
+#             ],
+#             vertical=True,
+#             pills=True,
+#         ),
+#     ],
+#     style=SIDEBAR_STYLE,
+# )
+
 
 #-------------------------------------------------------------------------------------
 layout = html.Div([
+    # sidebar,
+    # -------------------------------------------------------------------------------------
+    # Navigation bar
+    # html.Div([
+    #     html.H3('Navigation'),
+    #     html.Ul([
+    #         html.Li([
+    #             html.I(className='fa fa-home'),  # placeholder for icon
+    #             html.A('Home', href='http://www.example.com/home'),  # placeholder for link
+    #         ]),
+    #         html.Li([
+    #             html.I(className='fa fa-user'),
+    #             html.A('Profile', href='http://www.example.com/profile'),
+    #         ]),
+    #         html.Li([
+    #             html.I(className='fa fa-cog'),
+    #             html.A('Settings', href='http://www.example.com/settings'),
+    #         ]),
+    #         # add more list items here for additional links
+    #     ])
+    # ], className='navbar'),
 
     # -------------------------------------------------------------------------------------
     # Main content
