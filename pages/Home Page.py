@@ -1,35 +1,17 @@
 import dash
-from dash import html
 from dash import dcc, html, Output, Input, callback
-import plotly.express as px
-import plotly.graph_objects as go
-import plotly
 import dash_bootstrap_components as dbc
 import pandas as pd
 from components.column_dictionary import column_names, column_list
+from components import accordionitems
 
-
-dash.register_page(__name__, name="Home Page", path='/')
+dash.register_page(__name__, name="Home Page", path='/datadescription')
 
 df = pd.read_csv("coupons.csv")
 
 df_columns = df[column_list]
 
-
-def accordion_item(column_name, column_data):
-    return dbc.AccordionItem(
-       html.Ul([html.Li(value) for value in column_data.unique()]),
-       title=column_names.get(column_name, column_name),
-    )
-
-accordion = dbc.Accordion(
-    [
-        accordion_item(column_name, df[column_name]) for column_name in df_columns.columns
-    ],
-    always_open = True,
-    flush=True,
-    id ="accordion-always-open",
-)
+accordion = accordionitems.create_accordion_list(df, df_columns.columns)
 
 layout = html.Div(
     [

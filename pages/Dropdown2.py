@@ -5,130 +5,22 @@ import plotly.graph_objects as go
 import plotly
 import dash_bootstrap_components as dbc
 import pandas as pd
+from components import column_dictionary
+from components import dropdownfilters, choosecolumn
 
 
 dash.register_page(__name__, name='Coupon Charts')
 
 df = pd.read_csv("coupons.csv")
-# df.info()
-
-# List of columns that we would like to explore
-unique_weather = df['weather'].unique()
-unique_income = df['income'].unique()
-unique_education = df['education'].unique()
-unique_destination = df['destination'].unique()
-unique_passanger = df['passanger'].unique()
-unique_time = df['time'].unique()
-unique_expiration = df['expiration'].unique()
-unique_age = df['age'].unique()
-unique_gender = df['gender'].unique()
-
-#-------------------------------------------------------------------------------------
-# Function that creates a multi-select dropdown for each of the column in the dictionary
-def generate_dropdowns():
-    dictionary = [
-        {"label": "Weather", "id": "weather_dropdown", "values": unique_weather},
-        {"label": "Income", "id": "income_dropdown", "values": unique_income},
-        {"label": "Education", "id": "education_dropdown", "values": unique_education},
-        {"label": "Destination", "id": "destination_dropdown", "values": unique_destination},
-        {"label": "Passanger", "id": "passanger_dropdown", "values": unique_passanger},
-        {"label": "Time", "id": "time_dropdown", "values": unique_time},
-        {"label": "Expiration", "id": "expiration_dropdown", "values": unique_expiration},
-        {"label": "Age", "id": "age_dropdown", "values": unique_age},
-        {"label": "Gender", "id": "gender_dropdown", "values": unique_gender},
-    ]
-
-
-    dropdowns = []
-    rows = [dictionary[i:i + 5] for i in
-            range(0, len(dictionary), 5)]  # divide dictionary into rows with up to 5 items each
-
-    for row in rows:
-        width = 100 / len(row)  # calculate width based on the number of items in the row
-        for item in row:
-            dropdown = html.Div([
-                html.Label(item["label"]),
-                dcc.Dropdown(
-                    id=item['id'],
-                    options=[{'label': i, 'value': i} for i in item['values']],
-                    multi=True),
-            ], style={'width': f'{width}%', 'display': 'inline-block'})
-            dropdowns.append(dropdown)
-        dropdowns.append(html.Br())  # add a line break after each row
-    return dropdowns
-
-#-------------------------------------------------------------------------------------
-# Create Sidebar
-#
-# # styling the sidebar
-# SIDEBAR_STYLE = {
-#     "position": "fixed",
-#     "top": 0,
-#     "left": 0,
-#     "bottom": 0,
-#     "width": "16rem",
-#     "padding": "2rem 1rem",
-#     "background-color": "#f8f9fa",
-# }
-#
-# # padding for the page content
-# CONTENT_STYLE = {
-#     "margin-left": "18rem",
-#     "margin-right": "2rem",
-#     "padding": "2rem 1rem",
-# }
-#
-# # Make the actual sidebar
-# sidebar = html.Div(
-#     [
-#         html.H2("Filters", className="display-4"),
-#         html.Hr(),
-#         html.P(
-#             "Select filters to apply to the data", className="lead"
-#         ),
-#         dbc.Nav(
-#             [
-#                 dbc.NavLink("Home", href="/", active="exact"),
-#                 dbc.NavLink("Page 1", href="/page-1", active="exact"),
-#                 dbc.NavLink("Page 2", href="/page-2", active="exact"),
-#             ],
-#             vertical=True,
-#             pills=True,
-#         ),
-#     ],
-#     style=SIDEBAR_STYLE,
-# )
-
 
 #-------------------------------------------------------------------------------------
 layout = html.Div([
-    # sidebar,
-    # -------------------------------------------------------------------------------------
-    # Navigation bar
-    # html.Div([
-    #     html.H3('Navigation'),
-    #     html.Ul([
-    #         html.Li([
-    #             html.I(className='fa fa-home'),  # placeholder for icon
-    #             html.A('Home', href='http://www.example.com/home'),  # placeholder for link
-    #         ]),
-    #         html.Li([
-    #             html.I(className='fa fa-user'),
-    #             html.A('Profile', href='http://www.example.com/profile'),
-    #         ]),
-    #         html.Li([
-    #             html.I(className='fa fa-cog'),
-    #             html.A('Settings', href='http://www.example.com/settings'),
-    #         ]),
-    #         # add more list items here for additional links
-    #     ])
-    # ], className='navbar'),
 
     # -------------------------------------------------------------------------------------
     # Main content
     html.Div([
 
-        html.Div(generate_dropdowns()),
+        html.Div(dropdownfilters.generate_dropdowns()),
 
         # -------------------------------------------------------------------------------------
         # Clear filter Button
@@ -141,33 +33,8 @@ layout = html.Div([
 
             html.Label(['Choose column:'], style={'font-weight': 'bold', "text-align": "center"}),
 
-            dcc.Dropdown(id='my_dropdown',
-                         options=[
-                             {'label': 'Coupon', 'value': 'coupon'},
-                             {'label': 'Marital Status', 'value': 'maritalStatus'},
-                             {'label': 'Education', 'value': 'Education'},
-                             {'label': '# Children', 'value': 'has_children'},
-                             {'label': 'Age', 'value': 'age'},
-                             {'label': 'Destination', 'value': 'destination'},
-                             {'label': 'Gender', 'value': 'gender'},
-                             {'label': 'Expiration', 'value': 'expiration'},
-                             {'label': 'Time', 'value': 'time'},
-                             {'label': 'Weather', 'value': 'weather'},
+            choosecolumn.choose_column_dropdown('my_dropdown')
 
-                         ],
-                         optionHeight=35,  # height/space between dropdown options
-                         value='coupon',  # dropdown value selected automatically when page loads
-                         disabled=False,  # disable dropdown value selection
-                         multi=False,  # allow multiple dropdown values to be selected
-                         searchable=True,  # allow user-searching of dropdown values
-                         search_value='',  # remembers the value searched in dropdown
-                         placeholder='Please select...',  # gray, default text shown when no option is selected
-                         clearable=True,  # allow user to removes the selected value
-                         style={'width': "100%"},  # use dictionary to define CSS styles of your dropdown
-                         # className='select_box',           #activate separate CSS document in assets folder
-                         persistence=True,  # remembers dropdown value. Used with persistence_type
-                         persistence_type='memory'  # remembers dropdown value selected until...
-                         )
         ], style={'display': 'inline-block', 'width': '90%', 'height': '100px'}),  # changed from 4 to 3 columns
 
         #-------------------------------------------------------------------------------------

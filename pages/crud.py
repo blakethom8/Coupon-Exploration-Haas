@@ -7,23 +7,23 @@ import plotly.graph_objects as go
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from sqlalchemy.dialects.postgresql import JSONB
-from database import db
+from database import db, Product
 
 dash.register_page(__name__, name="Postgre Table")
 
-class Product(db.Model):
-    __tablename__ = 'productlist'
-
-    Phone = db.Column(db.String(40), nullable=False, primary_key=True)
-    Version = db.Column(db.String(40), nullable=False)
-    Price = db.Column(db.Integer, nullable=False)
-    Sales = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, phone, version, price, sales):
-        self.Phone = phone
-        self.Version = version
-        self.Price = price
-        self.Sales = sales
+# class Product(db.Model):
+#     __tablename__ = 'productlist'
+#
+#     Phone = db.Column(db.String(40), nullable=False, primary_key=True)
+#     Version = db.Column(db.String(40), nullable=False)
+#     Price = db.Column(db.Integer, nullable=False)
+#     Sales = db.Column(db.Integer, nullable=False)
+#
+#     def __init__(self, phone, version, price, sales):
+#         self.Phone = phone
+#         self.Version = version
+#         self.Price = price
+#         self.Sales = sales
 
 
 # ------------------------------------------------------------------------------------------------
