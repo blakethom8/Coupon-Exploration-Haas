@@ -11,11 +11,6 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, request, render_template, redirect, url_for
 from components.LoginFiles import LoginForm, RegisterForm
-#
-# s3 = boto3.client('s3',
-#                     aws_access_key_id='AKIA5YBQKQYJBKCQPKGE',
-#                     aws_secret_access_key='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',
-#                     region_name='us-west-2')
 
 
 server = Flask(__name__)
@@ -42,38 +37,6 @@ login_manager.login_view = 'login'
 
 
 
-# Flask routes
-
-@server.route('/')
-def home():
-    return redirect(url_for('login'))
-
-
-@server.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-
-        if user and check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            return redirect('/datadescription/')
-
-        # If credentials are not correct, return an error
-
-    return render_template('login.html', form=form)
-
-@server.route('/templates/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
 # ----------------------------------------
 # for your live Heroku PostgreSQL database
 # app.server.config["SQLALCHEMY_DATABASE_URI"] = "postgres://ntfhytpjxytbar:76e313ce534f461e2d422836883acbdd5618090\
@@ -83,11 +46,6 @@ app = dash.Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.SPACE
                 server=server, suppress_callback_exceptions=True, url_base_pathname='/datadescription/'
                 )
 
-@app.server.route('/datadescription/')
-@login_required
-def serve_dash_app():
-    print("serve_dash_app function called")
-    return app.index()
 
 
 # db.init_app(app.server) # use this when we are using the local postgre server

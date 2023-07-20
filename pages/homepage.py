@@ -7,6 +7,8 @@ from components import accordionitems
 
 dash.register_page(__name__, name="Home Page", path='/datadescription')
 
+
+
 df = pd.read_csv("coupons.csv")
 
 df_columns = df[column_list]
